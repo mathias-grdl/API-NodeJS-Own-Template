@@ -1,6 +1,40 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: L'ID auto-généré de l'utilisateur
+ *         email:
+ *           type: string
+ *           description: L'adresse email de l'utilisateur
+ *         password:
+ *           type: string
+ *           description: Le mot de passe de l'utilisateur (jamais retourné dans les réponses)
+ *         role:
+ *           type: string
+ *           enum: [user, admin]
+ *           description: Le rôle de l'utilisateur
+ *           default: user
+ *         createdAt:
+ *           type: string
+ *           format: date
+ *           description: La date de création du compte
+ *       example:
+ *         email: user@example.com
+ *         password: password123
+ *         role: user
+ */
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,

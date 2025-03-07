@@ -7,7 +7,17 @@ import mongoose from 'mongoose';
 
 const router = express.Router();
 
-// Swagger documentation route
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Base route
+ *     description: Returns a welcome message
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Welcome message
+ */
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Base route
@@ -15,7 +25,19 @@ router.get('/', (req, res) => {
     res.send('Hello, world!');
 });
 
-// Database connection test route
+/**
+ * @swagger
+ * /test-db:
+ *   get:
+ *     summary: Test database connection
+ *     description: Returns database connection status
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Database connection successful
+ *       500:
+ *         description: Database connection failed
+ */
 router.get('/test-db', async (req, res) => {
     try {
         // Use mongoose connection state to check connection

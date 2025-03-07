@@ -4,9 +4,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Exemple API',
+      title: 'API Documentation',
       version: '1.0.0',
-      description: 'Documentation API pour le service Exemple',
+      description: 'Documentation API pour le service fullstack-app',
     },
     servers: [
       {
@@ -14,8 +14,24 @@ const options = {
         description: 'Development server',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }]
   },
-  apis: ['./routes/exemple/*.js', './models/*.js'],
+  apis: [
+    './routes/**/*.js',
+    './models/*.js',
+    './middleware/*.js'
+  ],
 };
 
 export default swaggerJsdoc(options);

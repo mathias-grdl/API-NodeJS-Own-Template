@@ -11,7 +11,7 @@ const router = express.Router();
 // Authentication routes
 /**
  * @swagger
- * /api/users/register:
+ * /users/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Users]
@@ -32,6 +32,19 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 token:
+ *                   type: string
  *       400:
  *         description: Invalid data or user already exists
  */
@@ -39,7 +52,7 @@ router.post('/register', registerUser);
 
 /**
  * @swagger
- * /api/users/login:
+ * /users/login:
  *   post:
  *     summary: Login a user
  *     tags: [Users]
@@ -60,6 +73,19 @@ router.post('/register', registerUser);
  *     responses:
  *       200:
  *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 token:
+ *                   type: string
  *       401:
  *         description: Invalid credentials
  */
@@ -67,25 +93,47 @@ router.post('/login', loginUser);
 
 /**
  * @swagger
- * /api/users/logout:
+ * /users/logout:
  *   post:
  *     summary: Logout a user
  *     tags: [Users]
  *     responses:
  *       200:
  *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  */
 router.post('/logout', logoutUser);
 
 /**
  * @swagger
- * /api/users/profile:
+ * /users/profile:
  *   get:
  *     summary: Get user profile
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: User profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *       401:
+ *         description: Not authenticated
  *       404:
  *         description: User not found
  */
