@@ -4,6 +4,7 @@ import https from 'https';
 import http from 'http';
 import fs from 'fs';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db.js';
 import routes from './routes/index.js';
 
@@ -18,6 +19,15 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? 'https://yourdomain.com' : '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // 100 requests per IP
+  message: 'Too many requests—take a coffee break!'
+});
+
+app.use(limiter); // Apply to all routes
 
 // Regular middleware
 app.use(express.json());
