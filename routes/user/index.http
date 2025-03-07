@@ -1,0 +1,60 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2IzNmJjMzhmNzVhYTBhYmY3Y2Q5ZCIsImlhdCI6MTc0MTM3MjM4NSwiZXhwIjoxNzQzOTY0Mzg1fQ.Pt8lAkwqTikwcoDyJ-uL0HewQvX52yU82JkaKgpQ5qA
+
+### Register a new user
+POST http://localhost:3000/users/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Login
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Get user profile (requires auth token)
+GET http://localhost:3000/users/profile
+Authorization: Bearer {{token}}
+
+### Logout (client-side action)
+POST http://localhost:3000/users/logout
+Content-Type: application/json
+
+### Create a new user (Admin)
+POST http://localhost:3000/users/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "email": "newuser@example.com",
+  "password": "password123",
+  "role": "user"
+}
+
+### Get all users (Admin)
+GET http://localhost:3000/users/
+Authorization: Bearer {{token}}
+
+### Get a specific user by ID
+GET http://localhost:3000/users/USER_ID_HERE
+Authorization: Bearer {{token}}
+
+### Update a user
+PUT http://localhost:3000/users/USER_ID_HERE
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "email": "updated@example.com",
+  "role": "admin"
+}
+
+### Delete a user
+DELETE http://localhost:3000/users/USER_ID_HERE
+Authorization: Bearer {{token}}

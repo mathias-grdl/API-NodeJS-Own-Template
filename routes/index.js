@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '../config/swagger.js';
 import exempleRoutes from './exemple/index.js';
+import userRoutes from './user/index.js';
 import mongoose from 'mongoose';
 
 const router = express.Router();
@@ -44,5 +45,8 @@ router.get('/test-db', async (req, res) => {
 
 // Example routes
 router.use('/exemples', exempleRoutes);
+
+// User routes - mount at /users path
+router.use('/users', userRoutes);
 
 export default router;
