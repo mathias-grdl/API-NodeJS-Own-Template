@@ -1,47 +1,19 @@
 import express from 'express';
-import cors from 'cors';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db.js';
 import routes from './routes/index.js';
+import logger from './config/logger.js';
+import setupMiddleware from './middleware/setupMiddleware.js';
 
 // Initialize Express
 const app = express();
 const HTTP_PORT = process.env.HTTP_PORT || 3000;
 const HTTPS_PORT = process.env.HTTPS_PORT || 8443;
 
-// Security middleware
-app.use(helmet()); // Adds various security headers
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://yourdomain.com' : '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per IP
-  message: 'Too many requests—take a coffee break!'
-});
-
-app.use(limiter); // Apply to all routes
-
-// Regular middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Redirect HTTP to HTTPS in production
-if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-    if (!req.secure) {
-      return res.redirect(`https://${req.headers.host}${req.url}`);
-    }
-    next();
-  });
-}
+// Setup all middleware
+setupMiddleware(app);
 
 // Routes
 app.use('/', routes);
@@ -50,7 +22,6 @@ app.use('/', routes);
 const httpsOptions = {
   key: fs.readFileSync(process.env.SSL_KEY_PATH || './private-key.pem'),
   cert: fs.readFileSync(process.env.SSL_CERT_PATH || './certificate.pem'),
-  // Add modern and secure TLS options
   minVersion: 'TLSv1.2',
   cipherSuites: [
     'TLS_AES_256_GCM_SHA384',
@@ -61,17 +32,23 @@ const httpsOptions = {
 
 // Connect to database and start servers
 connectDB().then(() => {
-  console.log('MongoDB connected...');
+  logger.info('MongoDB connected...');
   
   // HTTP Server (can be used for redirects to HTTPS)
   http.createServer(app).listen(HTTP_PORT, () => {
-    console.log(`HTTP Server running on port ${HTTP_PORT}`);
+    logger.info(`HTTP Server running on port ${HTTP_PORT}`);
   });
    
   // HTTPS Server
   https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
-    console.log(`HTTPS Server running on port ${HTTPS_PORT}`);
+    logger.info(`HTTPS Server running on port ${HTTPS_PORT}`);
   });
 }).catch(err => {
-  console.error('Database connection failed', err);
+  logger.error('Database connection failed', err);
+});
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  logger.error(err);
+  res.status(500).send('Something broke!');
 });
