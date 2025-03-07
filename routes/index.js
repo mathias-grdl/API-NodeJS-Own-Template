@@ -1,8 +1,13 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '../config/swagger.js';
 import exempleRoutes from './exemple/index.js';
 import mongoose from 'mongoose';
 
 const router = express.Router();
+
+// Swagger documentation route
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Base route
 router.get('/', (req, res) => {

@@ -3,17 +3,70 @@ import exempleController from '../../controllers/exempleController.js';
 
 const router = express.Router();
 
-// Get all examples with optional title filter
+/**
+ * @swagger
+ * /exemples:
+ *   get:
+ *     summary: Obtenir tous les exemples
+ *     tags: [Exemples]
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Filtrer par titre (optionnel)
+ *     responses:
+ *       200:
+ *         description: Liste des exemples
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Exemple'
+ */
 router.get('/', exempleController.readExemples);
 
-// Get examples by title
+/**
+ * @swagger
+ * /exemples/title/{title}:
+ *   get:
+ *     summary: Get examples by title
+ *     tags: [Exemples]
+ *     parameters:
+ *       - in: path
+ *         name: title
+ *         required: true
+ *         schema:
+ *           type: string
+ */
 router.get('/title/:title', exempleController.readExemplesByTitle);
 
-// Get published examples
+/**
+ * @swagger
+ * /exemples/published:
+ *   get:
+ *     summary: Get published examples
+ *     tags: [Exemples]
+ *     responses:
+ *       200:
+ *         description: List of published examples
+ */
 router.get('/published', exempleController.readPublishedExemples);
 
-// Get a single example by ID - this should be last to avoid conflicts with other routes
+/**
+ * @swagger
+ * /exemples/{id}:
+ *   get:
+ *     summary: Get example by ID
+ *     tags: [Exemples]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ */
 router.get('/:id', exempleController.readExempleById);
 
 export default router;
- 
