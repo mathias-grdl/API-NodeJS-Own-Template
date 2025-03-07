@@ -1,5 +1,6 @@
 import express from 'express';
 import exempleController from '../../controllers/exempleController.js';
+import { protect } from '../../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -53,6 +54,40 @@ router.get('/title/:title', exempleController.readExemplesByTitle);
  *         description: List of published examples
  */
 router.get('/published', exempleController.readPublishedExemples);
+
+/**
+ * @swagger
+ * /exemples/user:
+ *   get:
+ *     summary: Get examples created by the authenticated user
+ *     tags: [Exemples]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of user's examples
+ *       401:
+ *         description: Not authenticated
+ */
+router.get('/user', protect, exempleController.readUserExemples);
+
+/**
+ * @swagger
+ * /exemples/user/{userId}:
+ *   get:
+ *     summary: Get examples created by a specific user
+ *     tags: [Exemples]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of user's examples
+ */
+router.get('/user/:userId', exempleController.readUserExemples);
 
 /**
  * @swagger

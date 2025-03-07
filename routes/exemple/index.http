@@ -1,0 +1,60 @@
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2IzNmJjMzhmNzVhYTBhYmY3Y2Q5ZCIsImlhdCI6MTc0MTM3NDMwOCwiZXhwIjoxNzQzOTY2MzA4fQ.5yLgoQ1pLaze87VVGbzb77TjP-kEApg-UEOXU0odKaM
+### Get all examples
+GET {{baseUrl}}/exemples
+Accept: application/json
+
+### Get examples filtered by title
+GET {{baseUrl}}/exemples?title=example
+Accept: application/json
+
+### Get example by ID
+GET {{baseUrl}}/exemples/67cb18becb492020b39b6afb
+Accept: application/json
+
+### Get example by title
+GET {{baseUrl}}/exemples/title/Example%20item
+Accept: application/json
+
+### Get published examples
+GET {{baseUrl}}/exemples/published
+Accept: application/json
+
+### Get examples for authenticated user
+GET {{baseUrl}}/exemples/user
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Get examples by specific user ID
+GET {{baseUrl}}/exemples/user/67cb36bc38f75aa0abf7cd9d
+Accept: application/json
+
+### Create new example (requires authentication)
+POST {{baseUrl}}/exemples
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My New Example",
+  "description": "This is an example created by an authenticated user",
+  "published": true
+}
+
+### Update example by ID (requires authentication if owned by user)
+PUT {{baseUrl}}/exemples/67cb43f66394f27d04edf704
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Updated Example Title",
+  "description": "This description has been updated",
+  "published": false
+}
+
+### Delete example by ID (requires authentication if owned by user)
+DELETE {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
+Authorization: Bearer {{token}}
+
+### Delete all examples (admin only)
+DELETE {{baseUrl}}/exemples
+Authorization: Bearer {{token}}

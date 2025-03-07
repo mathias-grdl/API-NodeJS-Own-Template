@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
  *       type: object
  *       required:
  *         - title
+ *         - user
  *       properties:
  *         id:
  *           type: string
@@ -26,10 +27,14 @@ import mongoose from 'mongoose';
  *           type: string
  *           format: date
  *           description: La date de création
+ *         user:
+ *           type: string
+ *           description: L'ID de l'utilisateur qui a créé cet exemple
  *       example:
  *         title: Mon exemple
  *         description: Une description d'exemple
  *         published: true
+ *         user: 60d0fe4f5311236168a109ca
  */
 
 const exempleSchema = new mongoose.Schema({
@@ -45,6 +50,11 @@ const exempleSchema = new mongoose.Schema({
   published: {
     type: Boolean,
     default: true
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+    required: true
   },
   dateCreation: {
     type: Date,

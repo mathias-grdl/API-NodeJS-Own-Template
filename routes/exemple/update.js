@@ -1,5 +1,8 @@
 import express from 'express';
 import exempleController from '../../controllers/exempleController.js';
+import { protect } from '../../middleware/authMiddleware.js';
+
+const router = express.Router();
 
 /**
  * @swagger
@@ -7,6 +10,8 @@ import exempleController from '../../controllers/exempleController.js';
  *   put:
  *     summary: Mettre à jour un exemple par ID
  *     tags: [Exemples]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -18,24 +23,15 @@ import exempleController from '../../controllers/exempleController.js';
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *               published:
- *                 type: boolean
+ *             $ref: '#/components/schemas/Exemple'
  *     responses:
  *       200:
  *         description: Exemple mis à jour avec succès
  *       404:
  *         description: Exemple non trouvé
+ *       403:
+ *         description: Non autorisé à modifier cet exemple
  */
-
-const router = express.Router();
-
-// Update an example by ID
-router.put('/:id', exempleController.validateUpdateExemple, exempleController.updateExempleById);
+router.put('/:id', protect, exempleController.validateUpdateExemple, exempleController.updateExempleById);
 
 export default router;

@@ -1,5 +1,6 @@
 import express from 'express';
 import exempleController from '../../controllers/exempleController.js';
+import { protect } from '../../middleware/authMiddleware.js';
 
 /**
  * @swagger
@@ -7,6 +8,8 @@ import exempleController from '../../controllers/exempleController.js';
  *   post:
  *     summary: Créer un nouvel exemple
  *     tags: [Exemples]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -18,10 +21,12 @@ import exempleController from '../../controllers/exempleController.js';
  *         description: Exemple créé avec succès
  *       400:
  *         description: Données invalides
+ *       401:
+ *         description: Non authentifié
  */
 const router = express.Router();
 
-// Create a new example
-router.post('/', exempleController.validateCreateExemple, exempleController.createExemple);
+// Create a new example - must be authenticated
+router.post('/', protect, exempleController.validateCreateExemple, exempleController.createExemple);
 
 export default router;

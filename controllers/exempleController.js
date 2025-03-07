@@ -32,7 +32,8 @@ async function createExemple(req, res) {
         const exemple = new Exemple({
             title: data.title,
             description: data.description,
-            published: data.published ? data.published : false
+            published: data.published ? data.published : false,
+            user: req.user.id  // Add the authenticated user's ID
         });
         
         await exemple.save();
@@ -75,7 +76,7 @@ async function readExemples(req, res) {
 
 async function readExempleById(req, res) {
     try {
-        const exemple = await Exemple.findById(req.params.id);
+        const exemple = await Exemple.findById(req.params.id).populate('user', 'email'); // Populate with just email field
         
         if (!exemple) {
             return res.status(404).json({
@@ -87,10 +88,11 @@ async function readExempleById(req, res) {
         
         return res.status(200).json({
             success: true,
+            message: 'Example retrieved successfully',
             data: exemple
         });
     } catch (error) {
-        console.error('Error fetching example:', error);
+        console.error('Error retrieving example:', error);
         return res.status(500).json({
             success: false,
             message: 'Internal server error',
@@ -166,19 +168,31 @@ async function updateExempleById(req, res) {
     }
 
     try {
-        const updatedExemple = await Exemple.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
-
-        if (!updatedExemple) {
+        // First check if the example exists and if the user has permission to update it
+        const exemple = await Exemple.findById(req.params.id);
+        
+        if (!exemple) {
             return res.status(404).json({
                 success: false,
                 message: 'Example not found',
                 error: 'Example with this ID does not exist'
             });
         }
+        
+        // Check if this user owns the example (or is an admin - if you have that functionality)
+        if (exemple.user.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: 'Forbidden',
+                error: 'You do not have permission to update this example'
+            });
+        }
+
+        const updatedExemple = await Exemple.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
 
         return res.status(200).json({
             success: true,
@@ -197,15 +211,27 @@ async function updateExempleById(req, res) {
 
 async function deleteExempleById(req, res) {
     try {
-        const deletedExemple = await Exemple.findByIdAndDelete(req.params.id);
-
-        if (!deletedExemple) {
+        // First check if the example exists and if the user has permission to delete it
+        const exemple = await Exemple.findById(req.params.id);
+        
+        if (!exemple) {
             return res.status(404).json({
                 success: false,
                 message: 'Example not found',
                 error: 'Example with this ID does not exist'
             });
         }
+        
+        // Check if this user owns the example (or is an admin - if you have that functionality)
+        if (exemple.user.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: 'Forbidden',
+                error: 'You do not have permission to delete this example'
+            });
+        }
+
+        const deletedExemple = await Exemple.findByIdAndDelete(req.params.id);
 
         return res.status(200).json({
             success: true,
@@ -241,6 +267,27 @@ async function deleteAllExemples(req, res) {
     }
 }
 
+async function readUserExemples(req, res) {
+    try {
+        const userId = req.params.userId || req.user.id;
+        
+        const exemples = await Exemple.find({ user: userId });
+        
+        return res.status(200).json({
+            success: true,
+            message: 'Examples retrieved successfully',
+            data: exemples
+        });
+    } catch (error) {
+        console.error('Error retrieving user examples:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+}
+
 export default {
     createExemple,
     readExemples,         
@@ -251,5 +298,6 @@ export default {
     deleteExempleById,
     deleteAllExemples,
     validateCreateExemple,
-    validateUpdateExemple
+    validateUpdateExemple,
+    readUserExemples
 }

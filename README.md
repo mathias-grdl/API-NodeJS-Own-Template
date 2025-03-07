@@ -73,29 +73,45 @@ pnpm start
 
 ```
 backend/
-├── config/             # Configuration files
-│   ├── db.js           # Database connection
-│   ├── logger.js       # Logging configuration
-│   └── swagger.js      # API documentation setup
-├── controllers/        # Request handlers
-│   └── exempleController.js
-├── middleware/         # Express middleware
-│   └── setupMiddleware.js
-├── models/             # Mongoose models
-│   └── exempleModel.js
-├── routes/             # API routes
-│   ├── index.js        # Main router
-│   └── exemple/        # Feature-specific routes
-│       ├── create.js
-│       ├── read.js
-│       ├── update.js
-│       ├── delete.js
-│       └── index.js
-├── test/               # Test files
-├── .env                # Environment variables
-├── .env.exemple        # Example environment variables
-├── server.js           # Application entry point
-└── README.md           # Project documentation
+├── config/                     # Configuration files
+│   ├── db.js                   # Database connection
+│   ├── logger.js               # Logging configuration
+│   ├── rateLimiter.js          # Rate limiting configuration
+│   └── swagger.js              # API documentation setup
+├── controllers/                # Request handlers
+│   └── exempleController.js    # Example controller logic
+├── middleware/                 # Express middleware
+│   ├── errorHandler.js         # Global error handling
+│   ├── requestLogger.js        # HTTP request logging
+│   ├── securityHeaders.js      # Security related headers
+│   ├── setupMiddleware.js      # Middleware configuration
+│   └── validation.js           # Input validation functions
+├── models/                     # Mongoose models
+│   └── exempleModel.js         # Example data model
+├── routes/                     # API routes
+│   ├── index.js                # Main router
+│   └── exemple/                # Feature-specific routes
+│       ├── create.js           # Create operations
+│       ├── read.js             # Read operations
+│       ├── update.js           # Update operations
+│       ├── delete.js           # Delete operations
+│       └── index.js            # Route aggregation
+├── test/                       # Test files
+│   ├── test-rate-limit.js      # Rate limit testing script
+│   └── api.test.js             # API endpoint tests
+├── utils/                      # Utility functions
+│   ├── asyncHandler.js         # Async error wrapper
+│   └── responseFormatter.js    # Standardized responses
+├── .env                        # Environment variables
+├── .env.exemple                # Example environment variables
+├── .gitignore                  # Git ignore file
+├── index.http                  # Sample HTTP requests
+├── certificate.pem             # SSL certificate
+├── private-key.pem             # SSL private key
+├── package.json                # Project dependencies
+├── pnpm-lock.yaml              # Package lock file
+├── server.js                   # Application entry point
+└── README.md                   # Project documentation
 ```
 
 ## API Documentation

@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2IzNmJjMzhmNzVhYTBhYmY3Y2Q5ZCIsImlhdCI6MTc0MTM3MjM4NSwiZXhwIjoxNzQzOTY0Mzg1fQ.Pt8lAkwqTikwcoDyJ-uL0HewQvX52yU82JkaKgpQ5qA
 
 ### Test base route
 GET {{baseUrl}}/
@@ -16,23 +17,37 @@ Accept: application/json
 GET {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
 Accept: application/json
 
-### Example of POST request
+### Get examples by user (authenticated user)
+GET {{baseUrl}}/exemples/user
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Get examples by specific user ID
+GET {{baseUrl}}/exemples/user/67cb36bc38f75aa0abf7cd9d
+Accept: application/json
+
+### Create an example (requires authentication)
 POST {{baseUrl}}/exemples
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "Example item",
-  "description": "This is a test item"
+  "description": "This is a test item",
+  "published": true
 }
 
-### Example of PUT request
+### Update an example (requires authentication if example belongs to user)
 PUT {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "Updated example",
-  "description": "This item has been updated"
+  "description": "This item has been updated",
+  "published": false
 }
 
-### Example of DELETE request
+### Delete an example (requires authentication if example belongs to user)
 DELETE {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
+Authorization: Bearer {{token}}

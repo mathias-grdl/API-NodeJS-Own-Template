@@ -1,5 +1,8 @@
 import express from 'express';
 import exempleController from '../../controllers/exempleController.js';
+import { protect } from '../../middleware/authMiddleware.js';
+
+const router = express.Router();
 
 /**
  * @swagger
@@ -7,6 +10,8 @@ import exempleController from '../../controllers/exempleController.js';
  *   delete:
  *     summary: Supprimer un exemple par ID
  *     tags: [Exemples]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -18,7 +23,10 @@ import exempleController from '../../controllers/exempleController.js';
  *         description: Exemple supprimé avec succès
  *       404:
  *         description: Exemple non trouvé
+ *       403:
+ *         description: Non autorisé à supprimer cet exemple
  */
+router.delete('/:id', protect, exempleController.deleteExempleById);
 
 /**
  * @swagger
@@ -26,17 +34,12 @@ import exempleController from '../../controllers/exempleController.js';
  *   delete:
  *     summary: Supprimer tous les exemples
  *     tags: [Exemples]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Tous les exemples ont été supprimés
+ *         description: Tous les exemples ont été supprimés avec succès
  */
-
-const router = express.Router();
-
-// Delete an example by ID
-router.delete('/:id', exempleController.deleteExempleById);
-
-// Delete all examples
-router.delete('/', exempleController.deleteAllExemples);
+router.delete('/', protect, exempleController.deleteAllExemples);
 
 export default router;
