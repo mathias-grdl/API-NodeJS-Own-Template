@@ -1,16 +1,32 @@
 import Exemple from '../models/exempleModel.js';
+import { body, param, query, validationResult } from 'express-validator';
+
+// Validation rules
+export const validateCreateExemple = [
+    body('title').notEmpty().withMessage('Title is required'),
+    body('description').optional(),
+    body('published').optional().isBoolean()
+];
+
+export const validateUpdateExemple = [
+    param('id').isMongoId().withMessage('Invalid ID format'),
+    body('title').optional(),
+    body('description').optional(),
+    body('published').optional().isBoolean()
+];
 
 async function createExemple(req, res) {
-    const data = req.body;
-    
-    // Validate request
-    if (!data.title) {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
         return res.status(400).json({
             success: false,
-            message: 'Content cannot be empty!',
-            error: 'Title is required'
+            message: 'Validation error',
+            errors: errors.array()
         });
     }
+
+    const data = req.body;
     
     try {
         const exemple = new Exemple({
@@ -131,6 +147,16 @@ async function readPublishedExemples(req, res) {
 }
 
 async function updateExempleById(req, res) {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation error',
+            errors: errors.array()
+        });
+    }
+
     if (!req.body) {
         return res.status(400).json({
             success: false,
@@ -223,5 +249,7 @@ export default {
     readPublishedExemples,
     updateExempleById,
     deleteExempleById,
-    deleteAllExemples
+    deleteAllExemples,
+    validateCreateExemple,
+    validateUpdateExemple
 }
