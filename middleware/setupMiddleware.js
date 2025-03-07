@@ -15,8 +15,32 @@ const setupMiddleware = (app) => {
   // Logging middleware
   app.use(morganMiddleware);
 
-  // Security middleware
-  app.use(helmet());
+  // Security middleware - Development friendly configuration
+  if (process.env.NODE_ENV === 'production') {
+    // Strict configuration for production
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:"],
+          },
+        },
+      })
+    );
+  } else {
+    // Relaxed configuration for development
+    app.use(
+      helmet({
+        contentSecurityPolicy: false, // Disable CSP in development
+        crossOriginEmbedderPolicy: false, // Allow embedding in iframes during dev
+        crossOriginOpenerPolicy: false, // More permissive opener policy for dev tools
+      })
+    );
+  }
+  
   app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? 'https://yourdomain.com' : '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

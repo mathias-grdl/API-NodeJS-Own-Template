@@ -13,7 +13,7 @@ GET {{baseUrl}}/exemples
 Accept: application/json
 
 ### Test exemples route (get by id)
-GET {{baseUrl}}/exemples/67caffbed3e2f226fce33463
+GET {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
 Accept: application/json
 
 ### Example of POST request
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ### Example of PUT request
-PUT {{baseUrl}}/exemples/67caffbed3e2f226fce33463
+PUT {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
 Content-Type: application/json
 
 {
@@ -35,4 +35,4 @@ Content-Type: application/json
 }
 
 ### Example of DELETE request
-DELETE {{baseUrl}}/exemples/67caffbed3e2f226fce33463
+DELETE {{baseUrl}}/exemples/67cb11dc2cd8fab26f53545a
