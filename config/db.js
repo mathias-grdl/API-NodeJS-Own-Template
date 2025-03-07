@@ -1,7 +1,16 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-// MongoDB Connection URI
-const uri = "mongodb+srv://mathiasg08:tegKLBGzcAMpyJCq@exempleapinodejs.r4jg7.mongodb.net/ExempleAPI?retryWrites=true&w=majority&appName=exempleApiNodeJS";
+dotenv.config();
+
+// Use environment variables for sensitive information
+const username = process.env.MONGODB_USERNAME || 'mathiasg08';
+const password = process.env.MONGODB_PASSWORD || 'tegKLBGzcAMpyJCq';
+const cluster = process.env.MONGODB_CLUSTER || 'exempleapinodejs.r4jg7.mongodb.net';
+const database = process.env.MONGODB_DATABASE || 'ExempleAPI';
+
+// Build the connection string from environment variables
+const uri = `mongodb+srv://${username}:${password}@${cluster}/${database}?retryWrites=true&w=majority&appName=exempleApiNodeJS`;
 
 // Connect to MongoDB using Mongoose
 async function connectDB() {
